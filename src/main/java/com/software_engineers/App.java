@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 //import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import com.software_engineers.database.DatabaseSetup;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
+        DatabaseSetup.initializeDatabase();
         launch();
     }
 

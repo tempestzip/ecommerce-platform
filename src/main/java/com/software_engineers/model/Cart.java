@@ -3,7 +3,7 @@ package com.software_engineers.model;
 /**
  * Represents a single line item in a user's shopping cart.
  * Acts as a simple data container passed between CartDAO and the JavaFX UI.
- *
+ * @author Marcus
  * @version 1.0
  */
 public class Cart

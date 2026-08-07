@@ -13,7 +13,7 @@ import java.sql.Statement;
 /**
  * Data Access Object for the Users table. Handles all database operations
  * related to user accounts: registration, lookup, login verification, and updates.
- *
+ * @author Marcus
  * @version 1.0
  */
 public class UserDAO
@@ -21,6 +21,8 @@ public class UserDAO
     /**
      * Hashes a plain-text password using SHA-256 and returns it as a hex string.
      * The password is never stored in plain text in the database.
+     * We used SHA-256 because its already built into Java so we didnt need to add another dependency. Its not the strongest option
+     * but its way better than storing plain text. 
      *
      * @param plainPassword the plain-text password to hash
      * @return the SHA-256 hash of the password, as a hex string

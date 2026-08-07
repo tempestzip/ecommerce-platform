@@ -14,8 +14,9 @@ import java.util.List;
 /**
  * Data Access Object for the Reviews table. Handles all database operations
  * related to product reviews: creation, lookup, updates, and deletion.
- *
+ * @author Marcus
  * @version 1.0
+ * We let SQL calculate the average instead of pulling every review since its easier and faster to let the database do it.
  */
 public class ReviewDAO
 {

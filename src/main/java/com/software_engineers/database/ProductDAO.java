@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Data Access Object for the Products table. Handles all database operations
  * related to products: creation, lookup, searching, listing, and stock/updates.
- *
+ * @author Marcus
  * @version 1.0
  */
 public class ProductDAO

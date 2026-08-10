@@ -3,7 +3,7 @@ package com.software_engineers.model;
 /**
  * Represents a stationery product sold in the store.
  * Acts as a simple data container passed between ProductDAO and the JavaFX UI.
- *
+ * @author Marcus
  * @version 1.0
  */
 public class Product

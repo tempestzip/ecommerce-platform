@@ -16,8 +16,10 @@ import java.util.List;
  * Data Access Object for the Orders and Order_Items tables. Handles placing
  * orders, viewing order history, updating order status, and basic sales
  * reporting for managers.
- *
+ * @author Marcus
  * @version 1.0
+ * We put the order insert and all the order item inserts in one transation so if somethinf fails none of it saves.
+ * otherwise we could end up with an order with no items or items with no order.
  */
 public class OrderDAO
 {

@@ -4,7 +4,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
- // Creates all application tables in the SQLite database if they do not already exist.
+/**
+ * Creates all application tables in the SQLite database if they do not already exist.
+ *
+ * @author Marcus
+ * @since 2026-07-09
+ * @version 1.0
+ */
  
 public class DatabaseSetup {
 

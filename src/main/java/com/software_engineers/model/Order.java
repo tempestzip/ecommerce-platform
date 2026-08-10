@@ -7,7 +7,7 @@ import java.util.List;
  * Represents a customer order, including its shipping/status details and
  * the list of items purchased. Acts as a simple data container passed
  * between OrderDAO and the JavaFX UI.
- *
+ * @author Marcus
  * @version 1.0
  */
 public class Order

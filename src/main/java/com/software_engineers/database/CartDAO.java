@@ -14,8 +14,9 @@ import java.util.List;
  * Data Access Object for the Cart table. Handles all database operations
  * related to a user's shopping cart: adding items, viewing, updating
  * quantities, and removing items.
- *
+ * @author Marcus
  * @version 1.0
+ * If the products already in the cart we can jus increase quantity instead of adding a new row. 
  */
 public class CartDAO
 {

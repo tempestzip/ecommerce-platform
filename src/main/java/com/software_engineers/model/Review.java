@@ -3,7 +3,7 @@ package com.software_engineers.model;
 /**
  * Represents a customer review left on a product.
  * Acts as a simple data container passed between ReviewDAO and the JavaFX UI.
- *
+ * @author Marcus
  * @version 1.0
  */
 public class Review

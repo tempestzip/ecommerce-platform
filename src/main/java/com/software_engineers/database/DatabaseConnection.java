@@ -5,7 +5,17 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
- // Singleton that manages a single JDBC connection to the SQLite database file "ecommerce.db".
+/**
+ * Singleton that connects to our SQLite database (ecommerce.db).
+ *
+ * We made this a singleton so we're not opening a new connection every time we
+ * need to talk to the database. SQLite also doesn't handle multiple connections
+ * writing at once very well, so keeping it to one shared connection made sense.
+ *
+ * @author Marcus
+ * @since 2026-07-09
+ * @version 1.0
+ */
 
 public class DatabaseConnection {
 

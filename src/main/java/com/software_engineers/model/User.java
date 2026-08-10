@@ -3,7 +3,7 @@ package com.software_engineers.model;
 /**
  * Represents a registered user of the application.
  * Acts as a simple data container passed between UserDAO and the JavaFX UI.
- *
+ * @author Marcus
  * @version 1.0
  */
 public class User

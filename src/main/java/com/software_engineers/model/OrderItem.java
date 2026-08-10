@@ -4,7 +4,7 @@ package com.software_engineers.model;
  * Represents a single product line within an order (matches a row in the
  * Order_Items table). Acts as a simple data container passed between
  * OrderDAO and the JavaFX UI.
- *
+ * @author Marcus
  * @version 1.0
  */
 public class OrderItem

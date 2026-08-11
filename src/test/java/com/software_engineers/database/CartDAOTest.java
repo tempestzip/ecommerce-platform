@@ -1,5 +1,6 @@
 package com.software_engineers.database;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,25 @@ public class CartDAOTest {
         DatabaseSetup.initializeDatabase();
     }
 
+    private static void cleanUp(Connection conn) throws SQLException {
+        // Clean up leftover test data in FK-safe order: cart -> products -> users.
+        try (PreparedStatement stmt = conn.prepareStatement(
+                "DELETE FROM Cart WHERE user_id IN (SELECT id FROM Users WHERE username = ?) AND product_id IN (SELECT id FROM Products WHERE name = ?);")) {
+            stmt.setString(1, TEST_USERNAME);
+            stmt.setString(2, TEST_PRODUCT_NAME);
+            stmt.executeUpdate();
+        }
+        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Products WHERE name = ?")) {
+            stmt.setString(1, TEST_PRODUCT_NAME);
+            stmt.executeUpdate();
+        }
+        try (PreparedStatement stmt = conn.prepareStatement(
+                "DELETE FROM Users WHERE username = ?")) {
+            stmt.setString(1, TEST_USERNAME);
+            stmt.executeUpdate();
+        }
+    }
+
     @BeforeEach
     void setUp() throws SQLException {
         cartDAO = new CartDAO();
@@ -41,22 +61,16 @@ public class CartDAOTest {
 
         Connection conn = DatabaseConnection.getInstance().getConnection();
 
-        // Clean up leftover test data in FK-safe order: cart -> products -> users.
-        try (PreparedStatement stmt = conn.prepareStatement(
-                "DELETE FROM Cart WHERE user_id IN (SELECT id FROM Users WHERE username = ?) AND product_id IN (SELECT id FROM Products WHERE name = ?)")) {
-
-            stmt.setString(1, TEST_USERNAME);
-            stmt.setString(2, TEST_PRODUCT_NAME);
-            stmt.executeUpdate();
-        }
-        try (PreparedStatement stmt = conn.prepareStatement(
-                "DELETE FROM Users WHERE username = ?")) {
-            stmt.setString(1, TEST_USERNAME);
-            stmt.executeUpdate();
-        }
+        cleanUp(conn);
 
         testUserId = userDAO.createUser(TEST_USERNAME, "password123", TEST_EMAIL, "123 Test St");
         testProductId = productDAO.createProduct(TEST_PRODUCT_NAME, "Paper for testing", 0.10, "Paper", 1000);
+    }
+
+    @AfterAll
+    static void finalCleanUp() throws SQLException {
+        Connection conn = DatabaseConnection.getInstance().getConnection();
+        cleanUp(conn);
     }
 
     @Test

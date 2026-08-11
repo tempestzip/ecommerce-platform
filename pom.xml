@@ -104,8 +104,19 @@
             <artifactId>javafx-maven-plugin</artifactId>
             <version>0.0.8</version>
             <configuration>
-                <mainClass>com.software_engineers.App</mainClass>
+              <mainClass>com.software_engineers.App</mainClass>
             </configuration>
+            <executions>
+              <execution>
+                <id>debug</id>
+                <configuration>
+                  <mainClass>com.software_engineers.App</mainClass>
+                  <options>
+                    <option>-agentlib:jdwp=transport=dt_socket,server=y,address=localhost:8000,suspend=y</option>
+                  </options>
+                </configuration>
+                </execution>
+            </executions>
         </plugin>
 
         <!-- Javadoc Plugin -->

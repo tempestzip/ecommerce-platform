@@ -58,7 +58,7 @@ public class CartService {
     /**
      * Returns every item currently in a user's cart.
      *
-     * @param userId the id of the user whose cart to fetch
+     * @param userID the id of the user whose cart to fetch
      * @return a list of the user's cart entries (empty if their cart is empty)
      * @throws RuntimeException if userID is not bound to a user, that is the userID
      *                          does not exist in the database.

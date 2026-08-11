@@ -2,4 +2,8 @@
 /target/
 
 # Ignore VS Code settings directory
-/.vscode/
+/.vscode/*
+
+# Re-include launch.json and tasks.json
+!/.vscode/launch.json
+!/.vscode/tasks.json

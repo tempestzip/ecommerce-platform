@@ -3,7 +3,6 @@ package com.software_engineers.service;
 import com.software_engineers.model.Cart;
 import com.software_engineers.model.Product;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import com.software_engineers.database.CartDAO;
@@ -41,7 +40,7 @@ public class CartService {
      *                                  zero
      */
     public boolean addToCart(int userId, int productId, int quantity)
-            throws IllegalArgumentException, RuntimeException {
+            throws IllegalArgumentException {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Cannot have a non-positive quantity");
         }
@@ -69,7 +68,7 @@ public class CartService {
      * @throws IllegalArgumentException if {@code quantity} is less than or equal to
      *                                  zero
      */
-    public boolean setQuantity(int cartId, int quantity) throws IllegalArgumentException, RuntimeException {
+    public boolean setQuantity(int cartId, int quantity) throws IllegalArgumentException {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Cannot have a non-positive quantity");
         }
@@ -82,11 +81,8 @@ public class CartService {
      *
      * @param userID the id of the user whose cart to fetch
      * @return a list of the user's cart entries (empty if their cart is empty)
-     * @throws RuntimeException if {@code userId} is not bound to a user, that is
-     *                          the userId
-     *                          does not exist in the database.
      */
-    public List<Cart> getCartItems(int userId) throws RuntimeException {
+    public List<Cart> getCartItems(int userId) {
         return cartDAO.getCartItemsByUser(userId);
     }
 
@@ -96,7 +92,7 @@ public class CartService {
      * @param userId the id of the user whose cart to calculate the subtotal
      * @return the user's subtotal
      */
-    public double getCartSubtotal(int userId) throws RuntimeException {
+    public double getCartSubtotal(int userId) {
         List<Cart> cartItems = this.getCartItems(userId);
 
         double sum = 0;
@@ -107,11 +103,66 @@ public class CartService {
         return sum;
     }
 
-    public int getCartItemCount(int userId) throws RuntimeException {
+    /**
+     * Returns the number of items in the user's cart
+     *
+     * @param userId the id of the user
+     * @return the number of items in the user's cart
+     */
+    public int getCartItemCount(int userId) {
         return this.getCartItems(userId).size();
     }
 
-    private Product cartToProd(Cart cart) throws RuntimeException {
+    /**
+     * Removes an item from a cart.
+     *
+     * @param cartId the id of the cart entry to remove
+     * @return true if the item was removed, false if no matching cart entry was
+     *         found
+     */
+    public boolean removeFromCart(int cartId) {
+        return cartDAO.removeFromCart(cartId);
+    }
+
+    /**
+     * Removes all items from a user's cart
+     *
+     * @param userId the id of the user whose cart will be cleared
+     * @return true if the cart was cleared, false if there were no items to clear
+     */
+    public boolean clearCart(int userId) {
+        return cartDAO.clearCart(userId);
+    }
+
+    /**
+     * Validates that a user's cart is valid for checkout
+     *
+     * @param userId the id of the user whose cart will be validated
+     * @return true if the user's cart is valid for checkout, false otherwise.
+     */
+    public boolean validateCartForCheckout(int userId) {
+        List<Cart> cartItems = getCartItems(userId);
+
+        if (cartItems.isEmpty()) {
+            return false;
+        }
+
+        for (Cart item : cartItems) {
+            Product product = productDAO.getProductById(item.getProductId());
+
+            if (product == null) {
+                throw new RuntimeException("Product with id: " + item.getProductId() + "does not exist.");
+            }
+
+            if (product.getStock() < item.getQuantity()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private Product cartToProd(Cart cart) {
         return productDAO.getProductById(cart.getProductId());
     }
 }

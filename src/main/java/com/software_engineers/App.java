@@ -10,8 +10,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import com.software_engineers.database.ProductDAO;
+import com.software_engineers.model.Cart;
 import com.software_engineers.model.Product;
+import com.software_engineers.model.User;
+import com.software_engineers.database.CartDAO;
 import com.software_engineers.database.DatabaseSetup;
+//import com.software_engineers.database.CartDAO;
+import com.software_engineers.database.UserDAO;
 
 public class App extends Application {
 
@@ -47,10 +52,41 @@ public class App extends Application {
         */
         List<Product> products = dao.getAllProducts();
 
+        //UserDAO userDAO = new UserDAO();
+        //int testUserID = userDAO.createUser("newcustomertest", "password123", "customer@test.com", "123 Test St");
+
+        UserDAO userDao = new UserDAO();
+        User testUser = userDao.getUserByUsername("newcustomertest");
+        int testUserID = testUser.getId();
+        
+
+        CartDAO cartDAO = new CartDAO();
+        //cartDAO.addToCart(testUserID, 1, 2);
+       // cartDAO.addToCart(testUserID, 4, 1);
+      //  cartDAO.addToCart(testUserID, 7, 1);
+        List<Cart> cartItems = cartDAO.getCartItemsByUser(testUserID);
+
+        GridPane cartGridPane = new GridPane();
+
+        int cartRow = 0;
+        double totalPrice = 0.0;
+        for(Cart c : cartItems)
+        {
+            Product p = dao.getProductById(c.getProductId());
+            Label cartLabel = new Label(p.getName() + " x" + c.getQuantity() + "- $" + (p.getPrice()*c.getQuantity()));
+            totalPrice = totalPrice + (p.getPrice()*c.getQuantity());
+            cartGridPane.add(cartLabel, 0, cartRow);
+            cartRow++;
+        }
+        Label totalLabel = new Label("Total price of cart: $" + totalPrice);
+        cartGridPane.add(totalLabel, 0, cartRow);
+
+
         GridPane gp = new GridPane();
 
 
         int row = 0;
+                
         for(Product p : products)
         {
             //int id, String name, String description, double price, String category, int stock
@@ -60,10 +96,15 @@ public class App extends Application {
             row++;
         }
 
+        
+
 
         
-        Scene scene2 = new Scene(gp, 640, 480);
-        stage.setScene(scene2);
+        //Scene scene2 = new Scene(gp, 640, 480);
+        //stage.setScene(scene2);
+
+        Scene cartScene = new Scene(cartGridPane, 640, 480);
+        stage.setScene(cartScene);
         stage.show();
 
 

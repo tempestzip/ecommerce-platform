@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.software_engineers.model.Cart;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Connection;
@@ -50,9 +52,31 @@ public class CartDAOTest {
         try (PreparedStatement stmt = conn.prepareStatement(
                 "DELETE FROM Users WHERE username = ?")) {
             stmt.setString(1, TEST_USERNAME);
+            stmt.executeUpdate();
         }
 
         testUserId = userDAO.createUser(TEST_USERNAME, "password123", TEST_EMAIL, "123 Test St");
         testProductId = productDAO.createProduct(TEST_PRODUCT_NAME, "Paper for testing", 0.10, "Paper", 1000);
+    }
+
+    @Test
+    void testAddToCart_succeedsDoesNotExist() {
+        int cartID = cartDAO.addToCart(testUserId, testProductId, 100);
+        assertNotEquals(-1, cartID);
+
+        Cart cart = cartDAO.getCartItemByUserAndProduct(testUserId, testProductId);
+        assertEquals(cart.getId(), cartID);
+    }
+
+    @Test
+    void testAddToCart_succeedsDoesExist() {
+        final int INITIAL = 100;
+        final int SUBSEQUENT = 20;
+        int cartID = cartDAO.addToCart(testUserId, testProductId, INITIAL);
+        boolean isSameCart = cartID == cartDAO.addToCart(testUserId, testProductId, SUBSEQUENT);
+        assertTrue(isSameCart);
+
+        Cart cartItem = cartDAO.getCartItemByUserAndProduct(testUserId, testProductId);
+        assertEquals(cartItem.getQuantity(), INITIAL + SUBSEQUENT);
     }
 }

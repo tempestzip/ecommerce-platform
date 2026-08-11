@@ -27,6 +27,7 @@ class OrderDAOTest
 {
     private static final String TEST_USERNAME = "order_test_user";
     private static final String TEST_EMAIL = "order_test_user@example.com";
+    private static final String TEST_PRODUCT_NAME = "Test Notebook";
 
     private OrderDAO orderDAO;
     private int testUserId;
@@ -71,8 +72,16 @@ class OrderDAOTest
             stmt.executeUpdate();
         }
 
+        // Also clean up any leftover test product from a previous run, so re-running
+        // the tests doesn't keep piling up duplicate "Test Notebook" rows.
+        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM Products WHERE name = ?;"))
+        {
+            stmt.setString(1, TEST_PRODUCT_NAME);
+            stmt.executeUpdate();
+        }
+
         testUserId = userDAO.createUser(TEST_USERNAME, "password123", TEST_EMAIL, "123 Test St");
-        testProductId = productDAO.createProduct("Test Notebook", "A notebook for testing", 5.99, "Notebooks", 100);
+        testProductId = productDAO.createProduct(TEST_PRODUCT_NAME, "A notebook for testing", 5.99, "Notebooks", 100);
     }
 
     /**

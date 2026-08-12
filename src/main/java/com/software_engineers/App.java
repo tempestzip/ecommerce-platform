@@ -115,7 +115,7 @@ public class App extends Application {
 
         List<Product> products = productDAO.getAllProducts();
 
-        stage.setScene(new Scene(createStartScreen(), 1000, 1000));
+        stage.setScene(new Scene(createStartScreen(), 2060, 1040));
         stage.show();
     }
 

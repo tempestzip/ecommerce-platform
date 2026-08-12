@@ -21,6 +21,7 @@ import com.software_engineers.database.DatabaseSetup;
 public class App extends Application {
     private int curUserId;
     private Scene itemsScene;
+    private Scene checkoutScene;
 
     Stage primaryStage;
 

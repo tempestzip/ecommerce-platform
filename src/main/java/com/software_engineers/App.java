@@ -18,6 +18,7 @@ import com.software_engineers.service.LoginRegService;
 import com.software_engineers.service.ProductService;
 import com.software_engineers.ui.view.BrowseView;
 import com.software_engineers.ui.view.LoginView;
+import com.software_engineers.ui.view.RegistrationView;
 import com.software_engineers.database.DatabaseSetup;
 
 public class App extends Application {
@@ -126,7 +127,12 @@ public class App extends Application {
     }
 
     public void navToLoginView() {
-        LoginView view = new LoginView(loginRegService, this::navToBrowseView);
+        LoginView view = new LoginView(loginRegService, this::navToBrowseView, this::navToRegisterView);
+        setNewScene(view);
+    }
+
+    public void navToRegisterView() {
+        RegistrationView view = new RegistrationView(loginRegService, this::navToLoginView);
         setNewScene(view);
     }
 

@@ -18,15 +18,18 @@ public class LoginRegService {
         this.currentUser = null;
     }
 
-    public boolean login(String username, String password) {
+    public boolean login(String username, String plainPassword) {
         if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("Username cannot be empty");
         }
-        if (password == null || password.trim().isEmpty()) {
+        if (plainPassword == null || plainPassword.trim().isEmpty()) {
             throw new IllegalArgumentException("Password cannot be empty");
         }
 
-        if (userDAO.verifyLogin(username, password)) {
+        username = username.trim();
+        plainPassword = plainPassword.trim();
+
+        if (userDAO.verifyLogin(username, plainPassword)) {
             this.currentUser = userDAO.getUserByUsername(username);
         }
 
@@ -38,7 +41,26 @@ public class LoginRegService {
     }
 
     public User register(String username, String plainPassword, String email, String address) {
-        validateUserData(username, plainPassword, email);
+        validateUserData(username, plainPassword);
+
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("Email cannot be empty");
+        }
+
+        if (address == null || address.trim().isEmpty()) {
+            throw new IllegalArgumentException("Address cannot be empty");
+        }
+
+        // Does not properly check for valid email format since "." can be contained
+        // prior to the domain name
+        if (!email.trim().contains("@") || !email.trim().contains(".")) {
+            throw new IllegalArgumentException("Email is not correct format");
+        }
+
+        username = username.trim();
+        plainPassword = plainPassword.trim();
+        email = email.trim();
+        address = address.trim();
 
         User existingUser = userDAO.getUserByUsername(username);
         if (existingUser != null) {
@@ -70,7 +92,7 @@ public class LoginRegService {
         return currentUser != null ? currentUser.getUsername() : "Guest";
     }
 
-    private void validateUserData(String username, String plainPassword, String email) {
+    private void validateUserData(String username, String plainPassword) {
         if (username == null || username.trim().isEmpty()) {
             throw new IllegalArgumentException("Username cannot be empty");
         }
@@ -85,14 +107,6 @@ public class LoginRegService {
 
         if (plainPassword.length() < 6) {
             throw new IllegalArgumentException("Password must be at least 6 characters");
-        }
-
-        if (email == null || email.trim().isEmpty()) {
-            throw new IllegalArgumentException("Email cannot be empty");
-        }
-
-        if (!email.contains("@") || !email.contains(".")) {
-            throw new IllegalArgumentException("Invalid email format");
         }
     }
 }

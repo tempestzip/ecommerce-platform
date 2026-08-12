@@ -18,32 +18,28 @@ import javafx.scene.layout.GridPane;
 public class LoginView extends GridPane {
     private final LoginRegService service;
     private final Runnable onLogin;
+    private final Runnable onSelectRegister;
 
-    public LoginView(LoginRegService service, Runnable onLogin) {
+    public LoginView(LoginRegService service, Runnable onLogin, Runnable onSelectRegister) {
         this.service = service;
         this.onLogin = onLogin;
-
-        this.setHgap(5);
-        this.setVgap(5);
-        this.setAlignment(Pos.CENTER);
+        this.onSelectRegister = onSelectRegister;
 
         Label errorLbl = new Label("ERROR");
         errorLbl.setVisible(false);
 
         this.add(errorLbl, 1, 0);
 
-        Label usernameLbl = new Label("Username: ");
-        usernameLbl.setAlignment(Pos.CENTER_RIGHT);
+        Label usernameLbl = new Label("Username:");
+        GridPane.setHalignment(usernameLbl, HPos.RIGHT);
 
         TextField usernameTextField = new TextField();
         usernameTextField.setPromptText("Username");
-        GridPane.setHalignment(usernameTextField, HPos.RIGHT);
 
         this.add(usernameLbl, 0, 1);
         this.add(usernameTextField, 1, 1);
 
-        Label passwordLbl = new Label("Password: ");
-        passwordLbl.setAlignment(Pos.CENTER_RIGHT);
+        Label passwordLbl = new Label("Password:");
         GridPane.setHalignment(passwordLbl, HPos.RIGHT);
 
         PasswordField passwordField = new PasswordField();
@@ -61,9 +57,14 @@ public class LoginView extends GridPane {
 
         Button registerButton = new Button("Register");
         registerButton.setMinWidth(180);
+        registerButton.setOnAction(event -> onSelectRegister.run());
         GridPane.setHalignment(registerButton, HPos.CENTER);
 
         this.add(registerButton, 1, 4);
+
+        this.setHgap(5);
+        this.setVgap(5);
+        this.setAlignment(Pos.CENTER);
     }
 
     private void handleLogin(TextField usernameField, PasswordField passwordField, Label errorLabel) {

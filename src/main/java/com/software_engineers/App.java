@@ -21,9 +21,6 @@ import com.software_engineers.view.LoginView;
 import com.software_engineers.database.DatabaseSetup;
 
 public class App extends Application {
-    private int curUserId;
-    private Scene itemsScene;
-    private Scene checkoutScene;
     LoginRegService loginRegService;
 
     Stage primaryStage;
@@ -119,8 +116,12 @@ public class App extends Application {
         List<Product> products = productDAO.getAllProducts();
 
         stage.setScene(new Scene(new LoginView(this.loginRegService, () -> {
-        }), 2060, 1040));
+        }), 1280, 720));
         stage.show();
+    }
+
+    public void navToProductsView() {
+
     }
 
     public static void main(String[] args) {

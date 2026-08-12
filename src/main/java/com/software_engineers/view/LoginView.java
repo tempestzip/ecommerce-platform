@@ -16,6 +16,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/**
+ * LoginView for UI. Refactored and modified code written by
+ *
+ * @author Faith
+ */
 public class LoginView extends VBox {
     private final LoginRegService service;
     private final Runnable onLogin;
@@ -29,6 +34,11 @@ public class LoginView extends VBox {
         grid.setVgap(5);
         grid.setAlignment(Pos.CENTER);
 
+        Label errorLbl = new Label("ERROR");
+        errorLbl.setVisible(false);
+
+        grid.add(errorLbl, 1, 0);
+
         Label usernameLbl = new Label("Username: ");
         usernameLbl.setAlignment(Pos.CENTER_RIGHT);
 
@@ -36,8 +46,8 @@ public class LoginView extends VBox {
         usernameTextField.setPromptText("Username");
         GridPane.setHalignment(usernameTextField, HPos.RIGHT);
 
-        grid.add(usernameLbl, 0, 0);
-        grid.add(usernameTextField, 1, 0);
+        grid.add(usernameLbl, 0, 1);
+        grid.add(usernameTextField, 1, 1);
 
         Label passwordLbl = new Label("Password: ");
         passwordLbl.setAlignment(Pos.CENTER_RIGHT);
@@ -46,17 +56,43 @@ public class LoginView extends VBox {
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Password");
 
-        grid.add(passwordLbl, 0, 1);
-        grid.add(passwordField, 1, 1);
+        grid.add(passwordLbl, 0, 2);
+        grid.add(passwordField, 1, 2);
 
         Button loginButton = new Button("Login");
         loginButton.setMinWidth(180);
+        loginButton.setOnAction(event -> handleLogin(usernameTextField, passwordField, errorLbl));
         GridPane.setHalignment(loginButton, HPos.CENTER);
 
-        grid.add(loginButton, 1, 2);
+        grid.add(loginButton, 1, 3);
+
+        Button registerButton = new Button("Register");
+        registerButton.setMinWidth(180);
+        GridPane.setHalignment(registerButton, HPos.CENTER);
+
+        grid.add(registerButton, 1, 4);
 
         this.getChildren().add(grid);
         this.setAlignment(Pos.CENTER);
+    }
+
+    private void handleLogin(TextField usernameField, PasswordField passwordField, Label errorLabel) {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
+        errorLabel.setVisible(false);
+
+        try {
+            if (service.login(username, password)) {
+                onLogin.run();
+            } else {
+                errorLabel.setText("Incorrect login information");
+                errorLabel.setVisible(true);
+            }
+        } catch (IllegalArgumentException e) {
+            errorLabel.setText(e.getMessage());
+            errorLabel.setVisible(true);
+        }
     }
 
     // @formatter:off

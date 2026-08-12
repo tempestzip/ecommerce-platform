@@ -3,8 +3,7 @@ package com.software_engineers;
 import java.util.List;
 
 import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
@@ -14,7 +13,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import com.software_engineers.database.ProductDAO;
 import com.software_engineers.model.Product;
 import com.software_engineers.service.LoginRegService;
 import com.software_engineers.view.LoginView;
@@ -22,11 +20,7 @@ import com.software_engineers.database.DatabaseSetup;
 
 public class App extends Application {
     LoginRegService loginRegService;
-
     Stage primaryStage;
-
-    // private Region createProductPreview() {
-    // }
 
     private Region createBrowsingRegion(List<Product> prodList) {
         VBox vBox = new VBox();
@@ -92,8 +86,6 @@ public class App extends Application {
         this.loginRegService = new LoginRegService();
         DatabaseSetup.initializeDatabase();
 
-        ProductDAO productDAO = new ProductDAO();
-
         // @formatter:off
         // productDAO.createProduct("Pencil", "Used for writing on paper and can be dissolved with an eraser", 1.99, "Writing utensil", 100);
         // productDAO.createProduct("Ballpoint pen", "Everyday writing", 2.99, "Writing Utensils", 100);
@@ -113,14 +105,28 @@ public class App extends Application {
         // productDAO.createProduct("Dry-erase Marker", "Used for whiteboards", 1.99, "Writing Utensils", 50);
         // @formatter:on
 
-        List<Product> products = productDAO.getAllProducts();
+        navToLoginView();
 
-        stage.setScene(new Scene(new LoginView(this.loginRegService, () -> {
-        }), 1280, 720));
-        stage.show();
+        primaryStage.setTitle("Stationery Shop");
+        primaryStage.setMinWidth(1280);
+        primaryStage.setMinHeight(720);
+        primaryStage.show();
     }
 
-    public void navToProductsView() {
+    public void setNewScene(Parent root) {
+        if (primaryStage.getScene() == null) {
+            primaryStage.setScene(new Scene(root, 1280, 720));
+        } else {
+            primaryStage.getScene().setRoot(root);
+        }
+    }
+
+    public void navToLoginView() {
+        LoginView view = new LoginView(loginRegService, this::navToBrowseView);
+        setNewScene(view);
+    }
+
+    public void navToBrowseView() {
 
     }
 

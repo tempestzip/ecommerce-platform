@@ -39,51 +39,6 @@ public class App extends Application {
         return vBox;
     }
 
-    private Region createTitleNav() {
-        Hyperlink titleNav = new Hyperlink("Stationery Shop");
-
-        return titleNav;
-    }
-
-    private Region createSearchNav() {
-        TextField searchField = new TextField();
-        searchField.setPromptText("Search Stationery Shop...");
-        HBox.setHgrow(searchField, Priority.ALWAYS);
-
-        Button searchButton = new Button("Search");
-
-        HBox searchNav = new HBox(searchField, searchButton);
-        HBox.setHgrow(searchNav, Priority.ALWAYS);
-
-        return searchNav;
-    }
-
-    private Region createSignInNav() {
-        Hyperlink signIn = new Hyperlink("Hello, Sign in");
-
-        return signIn;
-    }
-
-    private Region createCartNav() {
-        Hyperlink cartNav = new Hyperlink("Cart");
-
-        return cartNav;
-    }
-
-    private Region createNavBar() {
-        HBox navBar = new HBox(createTitleNav(), createSearchNav(), createSignInNav(), createCartNav());
-
-        navBar.setSpacing(5);
-
-        return navBar;
-    }
-
-    public Region createStartScreen() {
-        VBox startScreen = new VBox(createNavBar());
-
-        return startScreen;
-    }
-
     @Override
     public void start(Stage stage) {
         this.primaryStage = stage;

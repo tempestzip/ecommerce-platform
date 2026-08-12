@@ -17,14 +17,6 @@ import javafx.stage.Stage;
 import com.software_engineers.database.ProductDAO;
 import com.software_engineers.model.Product;
 import com.software_engineers.database.DatabaseSetup;
-<<<<<<< HEAD
-=======
-//import com.software_engineers.database.CartDAO;
-import com.software_engineers.database.UserDAO;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.control.PasswordField;
->>>>>>> ProductService
 
 public class App extends Application {
     private int curUserId;
@@ -38,7 +30,6 @@ public class App extends Application {
     private Region createBrowsingRegion(List<Product> prodList) {
         VBox vBox = new VBox();
 
-<<<<<<< HEAD
         for (int i = 0; i < (int) Math.ceil(prodList.size() / 5.0); ++i) {
             HBox hBox = new HBox();
             for (int j = 0; j < 5 && (i * 5) + j < prodList.size(); ++j) {
@@ -47,124 +38,6 @@ public class App extends Application {
             vBox.getChildren().add(hBox);
         }
         return vBox;
-=======
-        //UserDAO userDAO = new UserDAO();
-        //int curUserId = userDAO.createUser("newcustomertest", "password123", "customer@test.com", "123 Test St");
-
-        UserDAO userDao = new UserDAO();
-        User testUser = userDao.getUserByUsername("newcustomertest");
-        curUserId = testUser.getId();
-        
-
-        CartDAO cartDAO = new CartDAO();
-        //cartDAO.addToCart(curUserId, 1, 2);
-       // cartDAO.addToCart(curUserId, 4, 1);
-      //  cartDAO.addToCart(curUserId, 7, 1);
-        //cartDAO.addToCart(curUserId, 13, 1);
-        //cartDAO.addToCart(curUserId, 1, 1);
-        
-        
-
-        GridPane gp = new GridPane();
-        
-
-        Button viewCartButton = new Button("View Cart");
-        //(e -> stage.setScene(cartScene));
-        viewCartButton.setOnAction(e -> {
-            List<Cart> cartItems = cartDAO.getCartItemsByUser(curUserId);
-            GridPane cartGridPane = new GridPane();
-
-            int cartRow = 0;
-            double totalPrice = 0.0;
-            for(Cart c : cartItems)
-            {
-                Product p = dao.getProductById(c.getProductId());
-                Label cartLabel = new Label(p.getName() + " (x" + c.getQuantity() + ")- $" + (p.getPrice()*c.getQuantity()));
-                totalPrice = totalPrice + (p.getPrice()*c.getQuantity());
-                cartGridPane.add(cartLabel, 0, cartRow);
-                cartRow++;
-            }
-            double roundTotal = Math.round(totalPrice * 100.0)/100.0;
-            Label totalLabel = new Label("Total price of cart: $" + roundTotal);
-            cartGridPane.add(totalLabel, 0, cartRow);
-
-            Button prevButton = new Button("Back to Products");
-            prevButton.setOnAction(f -> stage.setScene(itemsScene));
-            cartRow++;
-            cartGridPane.add(prevButton, 0, cartRow);
-            Scene cartScene = new Scene(cartGridPane, 640, 480);
-            stage.setScene(cartScene);
-
-        
-        });
-
-
-        int row = 0;
-                
-        for(Product p : products)
-        {
-            //int id, String name, String description, double price, String category, int stock
-            Label newLab = new Label(p.getName() + " - $" + p.getPrice() + " | " 
-            + p.getCategory() + " | " + p.getDescription());
-
-            Button addToCartButton = new Button("Add to Cart");
-            addToCartButton.setOnAction(e ->{
-                cartDAO.addToCart(curUserId, p.getId(), 1);
-
-            });
-            gp.add(newLab, 0, row);   
-            gp.add(addToCartButton, 1, row);
-            row++;
-        }
-        gp.add(viewCartButton, 0, row);
-
-       // for (Cart c : cartItems) {
-       //     System.out.println(c.getId() + ": product " + c.getProductId() + ", qty " + c.getQuantity());
-       // }
-
-       GridPane loginGP = new GridPane();
-
-       Label usernameLbl = new Label("Username: ");
-       TextField usernameField = new TextField();
-
-       Label passwordLbl = new Label("Password: ");
-       PasswordField passwordField = new PasswordField();
-
-       Button loginButton = new Button("Login");
-
-       loginGP.add(usernameLbl, 0, 0);
-       loginGP.add(usernameField, 1, 0);
-
-       loginGP.add(passwordLbl, 0, 1);
-       loginGP.add(passwordField,1,1);
-        
-       loginGP.add(loginButton, 0,2);
-
-       loginButton.setOnAction(e ->{
-        String username = usernameField.getText();
-        String password = passwordField.getText();
-
-        userDao.verifyLogin(username, password);
-
-        if (true)
-        {
-            User theUser = userDao.getUserByUsername(username);
-            curUserId = theUser.getId();
-            cartDAO.clearCart(curUserId);
-            itemsScene = new Scene(gp, 640, 480);
-            stage.setScene(itemsScene);
-
-        }
-        
-       });
-
-
-        Scene loginScene = new Scene(loginGP, 640, 480);
-        stage.setScene(loginScene);
-        stage.show();
-
-
->>>>>>> ProductService
     }
 
     private Region createTitleNav() {

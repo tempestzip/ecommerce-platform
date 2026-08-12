@@ -1,4 +1,4 @@
-package com.software_engineers.view;
+package com.software_engineers.ui.view;
 
 import com.software_engineers.service.LoginRegService;
 
@@ -73,7 +73,7 @@ public class LoginView extends GridPane {
         errorLabel.setVisible(false);
 
         try {
-            if (service.login(username, password)) {
+            if (this.service.login(username, password)) {
                 onLogin.run();
             } else {
                 errorLabel.setText("Incorrect login information");

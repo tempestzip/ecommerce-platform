@@ -20,6 +20,9 @@ import com.software_engineers.database.UserDAO;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
+import java.util.ArrayList;
+import com.software_engineers.model.OrderItem;
+import com.software_engineers.database.OrderDAO;
 
 public class App extends Application {
     private int curUserId;
@@ -126,28 +129,59 @@ public class App extends Application {
            
                 TextField cardInfoBox2 = new TextField();
                 checkoutGridPane.add(cardInfoBox2, 2, 3);
-
+                //create order
                 Button placeOrderButton = new Button("Place Order");
                 placeOrderButton.setOnAction(e2 -> {
-                    GridPane orderConfirmationGridPane = new GridPane();
+                    try {
+                        List<Cart> currentCartItems = cartDAO.getCartItemsByUser(curUserId);
 
-                    Label orderConfirmationLabel = new Label("Order Confirmed");
-                    orderConfirmationGridPane.add(orderConfirmationLabel, 0, 0);
+                        if(currentCartItems.isEmpty()){
+                            Label errorLabel = new Label("Cart is empty.");
+                            checkoutGridPane.add(errorLabel, 0, 5);
+                            return;
+                        }
 
-                    Label confirmationEmailLabel = new Label("Email sent to:" + testUser.getEmail());
-                    orderConfirmationGridPane.add(confirmationEmailLabel, 0, 1);
+                        List<OrderItem> orderItems = new ArrayList<>();
+                        for (Cart cartItem : currentCartItems) {
+                            Product product = dao.getProductById(cartItem.getProductId());
+                            
+                            if(product == null) {
+                                throw new RuntimeException("Product not found");
+                            }
+                            OrderItem orderItem = new OrderItem(0, 0, cartItem.getProductId(),cartItem.getQuantity(), product.getPrice());
+                            orderItems.add(orderItem);
+                        } 
+                        OrderDAO orderDAO = new OrderDAO();
 
-                    Button cancelOrderButton = new Button("Cancel order");
-                    orderConfirmationGridPane.add(cancelOrderButton, 0, 2);
-                    cancelOrderButton.setOnAction(e3 -> {
-                        Label orderCanceledLabel = new Label("Order has been canceled and refund has been issued! ");
-                        orderConfirmationGridPane.add(orderCanceledLabel, 0, 3);
-                        orderConfirmationGridPane.add(prevButton, 1, 2);
-                    });
+                        int orderId = orderDAO.placeOrder(curUserId, testUser.getAddress(),orderItems);
+                        //clear cart upon ordering
+                        if(orderId > 0){
+                            cartDAO.clearCart(curUserId);
+                    
+                            GridPane orderConfirmationGridPane = new GridPane();
 
+                            Label orderConfirmationLabel = new Label("Order Confirmed");
+                            orderConfirmationGridPane.add(orderConfirmationLabel, 0, 0);
 
-                    Scene orderConfirmation = new Scene(orderConfirmationGridPane, 640, 480);
-                    stage.setScene(orderConfirmation);
+                            Label confirmationEmailLabel = new Label("Email sent to:" + testUser.getEmail());
+                            orderConfirmationGridPane.add(confirmationEmailLabel, 0, 1);
+
+                            Button cancelOrderButton = new Button("Cancel order");
+                            orderConfirmationGridPane.add(cancelOrderButton, 0, 2);
+                            cancelOrderButton.setOnAction(e3 -> {
+                                Label orderCanceledLabel = new Label("Order has been canceled and refund has been issued! ");
+                                orderConfirmationGridPane.add(orderCanceledLabel, 0, 3);
+                                orderConfirmationGridPane.add(prevButton, 1, 2);
+                            });
+
+                            Scene orderConfirmation = new Scene(orderConfirmationGridPane, 640, 480);
+                            stage.setScene(orderConfirmation);
+                        }
+                    }
+                    catch(Exception ex) {
+                        Label errorLabel = new Label("Could not place order: " + ex.getMessage());
+                        checkoutGridPane.add(errorLabel, 0, 5);
+                    }
                 });
             checkoutGridPane.add(placeOrderButton, 0, 4);
 

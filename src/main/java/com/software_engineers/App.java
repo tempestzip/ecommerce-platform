@@ -24,6 +24,7 @@ import javafx.scene.control.PasswordField;
 public class App extends Application {
     private int curUserId;
     private Scene itemsScene;
+    private Scene checkoutScene;
 
     @Override
     public void start(Stage stage) {
@@ -101,6 +102,63 @@ public class App extends Application {
             prevButton.setOnAction(f -> stage.setScene(itemsScene));
             cartRow++;
             cartGridPane.add(prevButton, 0, cartRow);
+            Button checkoutButton = new Button("Proceed to Checkout");
+            cartGridPane.add(checkoutButton, 1, cartRow);
+            checkoutButton.setOnAction(f2 -> {
+                GridPane checkoutGridPane = new GridPane();
+
+                Label checkoutTitle = new Label ("Checkout");
+                checkoutGridPane.add(checkoutTitle, 0, 0);
+
+                Label addressLabel = new Label("Shipping Address:");
+                Label userAddressLabel = new Label(testUser.getAddress());
+                checkoutGridPane.add(addressLabel, 0 , 1);
+                checkoutGridPane.add(userAddressLabel, 1, 1);
+ 
+                Label totalCheckoutLabel = new Label("Total: $" + roundTotal);
+                checkoutGridPane.add(totalCheckoutLabel, 0, 2);
+
+                Label cardInfoLabel = new Label("Card Number + CCV");
+                checkoutGridPane.add(cardInfoLabel, 0, 3);
+
+                TextField cardInfoBox1 = new TextField();
+                checkoutGridPane.add(cardInfoBox1, 1, 3);
+           
+                TextField cardInfoBox2 = new TextField();
+                checkoutGridPane.add(cardInfoBox2, 2, 3);
+
+                Button placeOrderButton = new Button("Place Order");
+                placeOrderButton.setOnAction(e2 -> {
+                    GridPane orderConfirmationGridPane = new GridPane();
+
+                    Label orderConfirmationLabel = new Label("Order Confirmed");
+                    orderConfirmationGridPane.add(orderConfirmationLabel, 0, 0);
+
+                    Label confirmationEmailLabel = new Label("Email sent to:" + testUser.getEmail());
+                    orderConfirmationGridPane.add(confirmationEmailLabel, 0, 1);
+
+                    Button cancelOrderButton = new Button("Cancel order");
+                    orderConfirmationGridPane.add(cancelOrderButton, 0, 2);
+                    cancelOrderButton.setOnAction(e3 -> {
+                        Label orderCanceledLabel = new Label("Order has been canceled and refund has been issued! ");
+                        orderConfirmationGridPane.add(orderCanceledLabel, 0, 3);
+                        orderConfirmationGridPane.add(prevButton, 1, 2);
+                    });
+
+
+                    Scene orderConfirmation = new Scene(orderConfirmationGridPane, 640, 480);
+                    stage.setScene(orderConfirmation);
+                });
+            checkoutGridPane.add(placeOrderButton, 0, 4);
+
+            Button backButton = new Button("Back to Items");
+            backButton.setOnAction(e4 -> stage.setScene(itemsScene));
+            checkoutGridPane.add(backButton, 1, 4);
+           
+            Scene checkoutScene = new Scene(checkoutGridPane, 640, 480);
+            stage.setScene(checkoutScene);
+       
+            });
             Scene cartScene = new Scene(cartGridPane, 640, 480);
             stage.setScene(cartScene);
 
@@ -166,6 +224,9 @@ public class App extends Application {
         }
         
        });
+           
+
+
 
 
         Scene loginScene = new Scene(loginGP, 640, 480);

@@ -22,7 +22,7 @@ public class ProductService {
         return productDAO.getProductById(id);
     }
 
-    public List<Product> getAllProducts() {
+    private List<Product> getAllProducts() {
         return productDAO.getAllProducts();
     }
 
@@ -30,6 +30,8 @@ public class ProductService {
         if (keyword.equals(null) || keyword.trim().isEmpty()) {
             return getAllProducts();
         }
+
+        keyword = keyword.trim();
 
         return productDAO.searchProductsByName(keyword);
     }

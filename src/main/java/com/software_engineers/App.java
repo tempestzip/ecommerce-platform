@@ -14,6 +14,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import com.software_engineers.model.Product;
+import com.software_engineers.service.CartService;
 import com.software_engineers.service.LoginRegService;
 import com.software_engineers.service.ProductService;
 import com.software_engineers.ui.view.BrowseView;
@@ -24,6 +25,7 @@ import com.software_engineers.database.DatabaseSetup;
 public class App extends Application {
     LoginRegService loginRegService;
     ProductService productService;
+    CartService cartService;
     Stage primaryStage;
 
     private Region createBrowsingRegion(List<Product> prodList) {
@@ -44,6 +46,7 @@ public class App extends Application {
         this.primaryStage = stage;
         this.loginRegService = new LoginRegService();
         this.productService = new ProductService();
+        this.cartService = new CartService();
         DatabaseSetup.initializeDatabase();
 
         // @formatter:off
@@ -92,9 +95,16 @@ public class App extends Application {
     }
 
     public void navToBrowseView() {
-        BrowseView view = new BrowseView(loginRegService, productService, this::navToBrowseView);
+        BrowseView view = new BrowseView(loginRegService, productService, cartService, this::navToBrowseView,
+                () -> {
+                });
         setNewScene(view);
     }
+
+    // public void navToCartView() {
+    // CartView view = new CartView();
+    // setNewScene(view);
+    // }
 
     public static void main(String[] args) {
         launch(args);

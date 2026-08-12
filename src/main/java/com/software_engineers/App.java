@@ -20,6 +20,11 @@ import com.software_engineers.database.DatabaseSetup;
 
 public class App extends Application {
 
+    Stage primaryStage;
+
+    // private Region createProductPreview() {
+    // }
+
     private Region createBrowsingRegion(List<Product> prodList) {
         VBox vBox = new VBox();
 
@@ -33,29 +38,23 @@ public class App extends Application {
         return vBox;
     }
 
-    private Region createCompanyNameNav() {
-        Hyperlink home = new Hyperlink("Stationery Shop");
+    private Region createTitleNav() {
+        Hyperlink titleNav = new Hyperlink("Stationery Shop");
 
-        return home;
+        return titleNav;
     }
 
-    private Region createSearchBox() {
+    private Region createSearchNav() {
         TextField searchField = new TextField();
         searchField.setPromptText("Search Stationery Shop...");
+        HBox.setHgrow(searchField, Priority.ALWAYS);
 
         Button searchButton = new Button("Search");
 
-        HBox hBox = new HBox(searchField, searchButton);
-        hBox.setAlignment(Pos.CENTER);
-        hBox.setPadding(new Insets(5, 5, 5, 5));
+        HBox searchNav = new HBox(searchField, searchButton);
+        HBox.setHgrow(searchNav, Priority.ALWAYS);
 
-        HBox.setHgrow(searchField, Priority.ALWAYS);
-        searchField.setMaxWidth(Double.MAX_VALUE);
-
-        HBox.setHgrow(hBox, Priority.ALWAYS);
-        hBox.setMaxWidth(Double.MAX_VALUE);
-
-        return hBox;
+        return searchNav;
     }
 
     private Region createSignInNav() {
@@ -65,33 +64,28 @@ public class App extends Application {
     }
 
     private Region createCartNav() {
-        Hyperlink cart = new Hyperlink("Cart");
+        Hyperlink cartNav = new Hyperlink("Cart");
 
-        return cart;
+        return cartNav;
     }
 
-    public Region startScreen() {
-        VBox vBox = new VBox();
+    private Region createNavBar() {
+        HBox navBar = new HBox(createTitleNav(), createSearchNav(), createSignInNav(), createCartNav());
 
-        HBox hBox = new HBox(createCompanyNameNav(), createSearchBox(), createSignInNav(), createCartNav());
+        navBar.setSpacing(5);
 
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(10, 20, 10, 20));
-        hBox.setSpacing(15);
+        return navBar;
+    }
 
-        hBox.setMaxWidth(Double.MAX_VALUE);
-        hBox.setPrefWidth(Double.MAX_VALUE);
+    public Region createStartScreen() {
+        VBox startScreen = new VBox(createNavBar());
 
-        vBox.setMaxWidth(Double.MAX_VALUE);
-        vBox.setPrefWidth(Double.MAX_VALUE);
-
-        vBox.getChildren().add(hBox);
-
-        return vBox;
+        return startScreen;
     }
 
     @Override
     public void start(Stage stage) {
+        this.primaryStage = stage;
 
         DatabaseSetup.initializeDatabase();
 
@@ -118,7 +112,7 @@ public class App extends Application {
 
         List<Product> products = productDAO.getAllProducts();
 
-        stage.setScene(new Scene(startScreen(), 1000, 1000));
+        stage.setScene(new Scene(createStartScreen(), 1000, 1000));
         stage.show();
     }
 

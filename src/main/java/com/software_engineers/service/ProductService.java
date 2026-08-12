@@ -27,14 +27,31 @@ public class ProductService {
     }
 
     public List<Product> searchProductsByName(String keyword) {
+        if (keyword.equals(null) || keyword.trim().isEmpty()) {
+            return getAllProducts();
+        }
+
         return productDAO.searchProductsByName(keyword);
     }
 
-    public List<Product> getProductsByCategory(String category) {
-        return productDAO.getProductsByCategory(category);
-    }
+    // @formatter:off
+    // maybe unused
+    // public List<Product> getProductsByCategory(String category) {
+    //     return productDAO.getProductsByCategory(category);
+    // }
+    // @formatter:on
 
     public boolean adjustStock(int productId, int amount) {
+        Product product = productDAO.getProductById(productId);
+        if (product == null) {
+            throw new RuntimeException("Product with id: " + productId + " does not exist");
+        }
+
+        if (product.getStock() - amount < 0) {
+            throw new RuntimeException("Adjusting the stock of product with id: " + productId + " by " + amount
+                    + " would result in a negative stock of this product");
+        }
+
         return productDAO.adjustStock(productId, amount);
     }
 }

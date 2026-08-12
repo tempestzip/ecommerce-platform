@@ -3,7 +3,7 @@ package com.software_engineers.service;
 import com.software_engineers.model.Cart;
 import com.software_engineers.model.Product;
 
-import java.sql.SQLException;
+//import java.sql.SQLException;
 import java.util.List;
 
 import com.software_engineers.database.CartDAO;

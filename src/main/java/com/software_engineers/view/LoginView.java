@@ -3,26 +3,60 @@ package com.software_engineers.view;
 import com.software_engineers.model.User;
 import com.software_engineers.service.LoginRegService;
 
+import javafx.beans.property.StringProperty;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class LoginView extends VBox {
     private final LoginRegService service;
+    private final Runnable onLogin;
 
-    public LoginView(LoginRegService service) {
+    public LoginView(LoginRegService service, Runnable onLogin) {
         this.service = service;
+        this.onLogin = onLogin;
+
+        GridPane grid = new GridPane();
+        grid.setHgap(5);
+        grid.setVgap(5);
+        grid.setAlignment(Pos.CENTER);
+
+        Label usernameLbl = new Label("Username: ");
+        usernameLbl.setAlignment(Pos.CENTER_RIGHT);
 
         TextField usernameTextField = new TextField();
         usernameTextField.setPromptText("Username");
+        GridPane.setHalignment(usernameTextField, HPos.RIGHT);
+
+        grid.add(usernameLbl, 0, 0);
+        grid.add(usernameTextField, 1, 0);
+
+        Label passwordLbl = new Label("Password: ");
+        passwordLbl.setAlignment(Pos.CENTER_RIGHT);
+        GridPane.setHalignment(passwordLbl, HPos.RIGHT);
 
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Password");
 
+        grid.add(passwordLbl, 0, 1);
+        grid.add(passwordField, 1, 1);
+
+        Button loginButton = new Button("Login");
+        loginButton.setMinWidth(180);
+        GridPane.setHalignment(loginButton, HPos.CENTER);
+
+        grid.add(loginButton, 1, 2);
+
+        this.getChildren().add(grid);
+        this.setAlignment(Pos.CENTER);
     }
 
     // @formatter:off

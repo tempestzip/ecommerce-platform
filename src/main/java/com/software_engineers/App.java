@@ -16,12 +16,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import com.software_engineers.database.ProductDAO;
 import com.software_engineers.model.Product;
+import com.software_engineers.service.LoginRegService;
+import com.software_engineers.view.LoginView;
 import com.software_engineers.database.DatabaseSetup;
 
 public class App extends Application {
     private int curUserId;
     private Scene itemsScene;
     private Scene checkoutScene;
+    LoginRegService loginRegService;
 
     Stage primaryStage;
 
@@ -89,7 +92,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         this.primaryStage = stage;
-
+        this.loginRegService = new LoginRegService();
         DatabaseSetup.initializeDatabase();
 
         ProductDAO productDAO = new ProductDAO();
@@ -115,7 +118,8 @@ public class App extends Application {
 
         List<Product> products = productDAO.getAllProducts();
 
-        stage.setScene(new Scene(createStartScreen(), 2060, 1040));
+        stage.setScene(new Scene(new LoginView(this.loginRegService, () -> {
+        }), 2060, 1040));
         stage.show();
     }
 

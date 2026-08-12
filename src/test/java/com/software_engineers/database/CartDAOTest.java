@@ -93,4 +93,25 @@ public class CartDAOTest {
         Cart cartItem = cartDAO.getCartItemByUserAndProduct(testUserId, testProductId);
         assertEquals(cartItem.getQuantity(), INITIAL + SUBSEQUENT);
     }
+
+    @Test
+    void testAddToCart_userDoesNotExist() {
+        // User with userId 9999999 does not exist
+        assertThrows(RuntimeException.class,
+                () -> cartDAO.addToCart(9999999, testProductId, 50));
+    }
+
+    @Test
+    void testUpdateQuantity_validCartId() {
+        final int INITIAL = 100;
+        final int SUBSEQUENT = 20;
+        int cartId = cartDAO.addToCart(testUserId, testProductId, INITIAL);
+
+        // Assert that rows were updated
+        assertTrue(cartDAO.updateQuantity(cartId, SUBSEQUENT));
+
+        // Assert the new value was set
+        Cart cart = cartDAO.getCartItemByUserAndProduct(testUserId, testProductId);
+        assertEquals(cart.getQuantity(), SUBSEQUENT);
+    }
 }
